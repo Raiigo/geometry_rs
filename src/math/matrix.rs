@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, ops::Add};
 
 pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
@@ -18,6 +18,15 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             content: [[0.0; ROW]; COLUMN],
         }
     }
+
+    pub fn full<T: Into<f64>>(value: T) -> Self {
+        Self {
+            row: ROW,
+            column: COLUMN,
+            content: [[value.into(); ROW]; COLUMN],
+        }
+    }
+
     pub fn identity() -> Self {
         let content_vec: Vec<Vec<f64>> = [[0.0; ROW]; COLUMN].iter_mut().enumerate().map(|(j, l)| {
             l.into_iter().enumerate().map(|(i, e)| {
@@ -57,6 +66,33 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             Option::None
         } else {
             Option::Some(&mut self.content[j.into()][i.into()])
+        }
+    }
+}
+
+impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ROW}, {COLUMN}> {
+    type Output = Option<Matrix<ROW, COLUMN>>;
+    
+    fn add(self, rhs: Self) -> Self::Output {
+        if self.row == rhs.row && self.column == rhs.column {
+            let new_content_vec: Vec<Vec<f64>> = self.content.into_iter().enumerate().map(|(j, l)| {
+                l.into_iter().enumerate().map(|(i, e)| {
+                    e + rhs.content[j][i]
+                }).collect()
+            }).collect();
+            let mut new_content_array: [[f64; ROW]; COLUMN] = [[0.0; ROW]; COLUMN];
+            for i in 0..ROW {
+                for j in 0..COLUMN {
+                    new_content_array[j][i] = new_content_vec[j][i];
+                }
+            }
+            Option::Some(Matrix {
+                row: ROW,
+                column: COLUMN,
+                content: new_content_array,
+            })
+        } else {
+            Option::None
         }
     }
 }
