@@ -6,7 +6,7 @@ use std::{
 pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
     pub column: usize,
-    content: [[f64; ROW]; COLUMN],
+    content: [[f64; COLUMN]; ROW],
 }
 
 impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
@@ -17,7 +17,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
         Self {
             row: ROW,
             column: COLUMN,
-            content: [[0.0; ROW]; COLUMN],
+            content: [[0.0; COLUMN]; ROW],
         }
     }
 
@@ -25,12 +25,12 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
         Self {
             row: ROW,
             column: COLUMN,
-            content: [[value.into(); ROW]; COLUMN],
+            content: [[value.into(); COLUMN]; ROW],
         }
     }
 
     pub fn identity() -> Self {
-        let content_vec: Vec<Vec<f64>> = [[0.0; ROW]; COLUMN]
+        let content_vec: Vec<Vec<f64>> = [[0.0; COLUMN]; ROW]
             .iter_mut()
             .enumerate()
             .map(|(j, l)| {
@@ -41,7 +41,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             })
             .collect();
 
-        let mut content_array: [[f64; ROW]; COLUMN] = [[0.0; ROW]; COLUMN];
+        let mut content_array: [[f64; COLUMN]; ROW] = [[0.0; COLUMN]; ROW];
 
         for i in 0..ROW {
             for j in 0..COLUMN {
@@ -89,7 +89,7 @@ impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ ROW }, { COLUMN }>
                         .collect()
                 })
                 .collect();
-            let mut new_content_array: [[f64; ROW]; COLUMN] = [[0.0; ROW]; COLUMN];
+            let mut new_content_array: [[f64; COLUMN]; ROW] = [[0.0; COLUMN]; ROW];
             for i in 0..ROW {
                 for j in 0..COLUMN {
                     new_content_array[j][i] = new_content_vec[j][i];
