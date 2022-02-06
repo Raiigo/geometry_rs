@@ -1,5 +1,5 @@
-use std::ops::{Add, Mul};
 use std::fmt::Display;
+use std::ops::{Add, Mul};
 
 pub struct Vec3 {
     pub x: f64,
@@ -8,8 +8,7 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
-    pub fn new<T: Into<f64>>(x: T, y: T, z: T) -> Self
-    {
+    pub fn new<T: Into<f64>>(x: T, y: T, z: T) -> Self {
         Self {
             x: x.into(),
             y: y.into(),
@@ -26,12 +25,11 @@ impl Vec3 {
     }
 
     pub fn angle(&self, vector: &Self) -> f64 {
-        ((self.scalar(vector)/(self.length() * vector.length()))).acos()
+        (self.scalar(vector) / (self.length() * vector.length())).acos()
     }
 }
 
-impl<T: Into<f64> + Copy> Mul<T> for &Vec3
-{
+impl<T: Into<f64> + Copy> Mul<T> for &Vec3 {
     type Output = Vec3;
 
     fn mul(self, rhs: T) -> Self::Output {
