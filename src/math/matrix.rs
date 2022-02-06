@@ -130,6 +130,20 @@ impl<const ROW_1: usize, const COLUMN_1: usize, const ROW_2: usize, const COLUMN
     }
 }
 
+impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> Mul<T> for &Matrix<ROW, COLUMN> {
+    type Output = Matrix<ROW, COLUMN>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        let mut result = Matrix::<ROW, COLUMN>::new();
+        for i in 0..ROW {
+            for j in 0..COLUMN {
+                result.content[i][j] = self.content[i][j] * rhs.into();
+            }
+        }
+        result
+    }
+}
+
 impl<const ROW: usize, const COLUMN: usize> Display for Matrix<{ ROW }, { COLUMN }> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut lines: String = String::from("");
