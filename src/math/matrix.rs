@@ -33,10 +33,10 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
         let content_vec: Vec<Vec<f64>> = [[0.0; COLUMN]; ROW]
             .iter_mut()
             .enumerate()
-            .map(|(j, l)| {
+            .map(|(i, l)| {
                 l.into_iter()
                     .enumerate()
-                    .map(|(i, e)| if i == j { 1.0 } else { *e })
+                    .map(|(j, e)| if i == j { 1.0 } else { *e })
                     .collect()
             })
             .collect();
@@ -45,7 +45,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
 
         for i in 0..ROW {
             for j in 0..COLUMN {
-                content_array[j][i] = content_vec[j][i];
+                content_array[i][j] = content_vec[i][j];
             }
         }
 
@@ -60,7 +60,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
         if i.into() > Self::ROW || j.into() > Self::COLUMN {
             Option::None
         } else {
-            Option::Some(self.content[j.into()][i.into()])
+            Option::Some(self.content[i.into()][j.into()])
         }
     }
 
@@ -68,7 +68,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
         if i.into() > Self::ROW || j.into() > Self::COLUMN {
             Option::None
         } else {
-            Option::Some(&mut self.content[j.into()][i.into()])
+            Option::Some(&mut self.content[i.into()][j.into()])
         }
     }
 }
@@ -82,17 +82,17 @@ impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ ROW }, { COLUMN }>
                 .content
                 .into_iter()
                 .enumerate()
-                .map(|(j, l)| {
+                .map(|(i, l)| {
                     l.into_iter()
                         .enumerate()
-                        .map(|(i, e)| e + rhs.content[j][i])
+                        .map(|(j, e)| e + rhs.content[i][j])
                         .collect()
                 })
                 .collect();
             let mut new_content_array: [[f64; COLUMN]; ROW] = [[0.0; COLUMN]; ROW];
             for i in 0..ROW {
                 for j in 0..COLUMN {
-                    new_content_array[j][i] = new_content_vec[j][i];
+                    new_content_array[i][j] = new_content_vec[i][j];
                 }
             }
             Option::Some(Matrix {
@@ -118,9 +118,9 @@ impl<const ROW_1: usize, const COLUMN_1: usize, const ROW_2: usize, const COLUMN
                 for j_r in 0..result.column {
                     let mut sum = 0.0;
                     for c in 0..ROW_2 {
-                        sum = sum + self.content[c][i_r] * rhs.content[j_r][c];
+                        sum = sum + self.content[i_r][c] * rhs.content[c][j_r];
                     }
-                    result.content[j_r][i_r] = sum;
+                    result.content[i_r][j_r] = sum;
                 }
             }
             Option::Some(result)
