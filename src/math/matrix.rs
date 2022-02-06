@@ -7,6 +7,7 @@ pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
     pub column: usize,
     content: [[f64; COLUMN]; ROW],
+    counter: usize,
 }
 
 impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
@@ -18,6 +19,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: [[0.0; COLUMN]; ROW],
+            counter: 0,
         }
     }
 
@@ -26,6 +28,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: [[value.into(); COLUMN]; ROW],
+            counter: 0,
         }
     }
 
@@ -53,6 +56,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: content_array,
+            counter: 0,
         }
     }
 
@@ -99,6 +103,7 @@ impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ ROW }, { COLUMN }>
                 row: ROW,
                 column: COLUMN,
                 content: new_content_array,
+                counter: 0,
             })
         } else {
             Option::None
@@ -144,19 +149,14 @@ impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> Mul<T> for &Mat
     }
 }
 
-struct MatrixIterMut<'a, const ROW: usize, const COLUMN: usize> {
-    parent: &'a mut Matrix<ROW, COLUMN>,
-    counter: usize,
-}
-
-impl<'a, const ROW: usize, const COLUMN: usize> Iterator for MatrixIterMut<'a, ROW, COLUMN> {
-    type Item = &'a mut f64;
+impl<const ROW: usize, const COLUMN: usize> Iterator for Matrix<ROW, COLUMN> {
+    type Item = f64;
 
     fn next<'b>(&'b mut self) -> Option<Self::Item> {
-        let row = self.counter / ROW;
-        let column = self.counter % ROW;
-        let mut elem = self.parent.get_mut_element(row, column).unwrap();
-        Option::Some(&mut elem)
+        let i = self.counter / ROW;
+        let j = self.counter % ROW;
+        self.counter = self.counter + 1;
+        Option::Some(self.content[i][j])
     }
 }
 
