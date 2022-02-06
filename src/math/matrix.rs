@@ -144,6 +144,22 @@ impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> Mul<T> for &Mat
     }
 }
 
+struct MatrixIterMut<'a, const ROW: usize, const COLUMN: usize> {
+    parent: &'a mut Matrix<ROW, COLUMN>,
+    counter: usize,
+}
+
+impl<'a, const ROW: usize, const COLUMN: usize> Iterator for MatrixIterMut<'a, ROW, COLUMN> {
+    type Item = &'a mut f64;
+
+    fn next<'b>(&'b mut self) -> Option<Self::Item> {
+        let row = self.counter / ROW;
+        let column = self.counter % ROW;
+        let mut elem = self.parent.get_mut_element(row, column).unwrap();
+        Option::Some(&mut elem)
+    }
+}
+
 impl<const ROW: usize, const COLUMN: usize> Display for Matrix<{ ROW }, { COLUMN }> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut lines: String = String::from("");
