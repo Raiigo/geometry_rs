@@ -7,7 +7,6 @@ pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
     pub column: usize,
     content: [[f64; COLUMN]; ROW],
-    counter: usize,
 }
 
 impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
@@ -19,7 +18,6 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: [[0.0; COLUMN]; ROW],
-            counter: 0,
         }
     }
 
@@ -28,7 +26,6 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: [[value.into(); COLUMN]; ROW],
-            counter: 0,
         }
     }
 
@@ -56,7 +53,6 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: content_array,
-            counter: 0,
         }
     }
 
@@ -103,7 +99,6 @@ impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ ROW }, { COLUMN }>
                 row: ROW,
                 column: COLUMN,
                 content: new_content_array,
-                counter: 0,
             })
         } else {
             Option::None
@@ -146,17 +141,6 @@ impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> Mul<T> for &Mat
             }
         }
         result
-    }
-}
-
-impl<const ROW: usize, const COLUMN: usize> Iterator for Matrix<ROW, COLUMN> {
-    type Item = f64;
-
-    fn next<'b>(&'b mut self) -> Option<Self::Item> {
-        let i = self.counter / ROW;
-        let j = self.counter % ROW;
-        self.counter = self.counter + 1;
-        Option::Some(self.content[i][j])
     }
 }
 
