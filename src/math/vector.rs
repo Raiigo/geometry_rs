@@ -105,7 +105,7 @@ impl<const SIZE: usize> Display for VecD<SIZE> {
             line.push_str(&format!("{}, ", e));
         }
         line.remove(line.len() - 1);
-        line.remove(line.len() - 2);
+        line.remove(line.len() - 1);
         line.push(')');
         write!(f, "{}", line)
     }

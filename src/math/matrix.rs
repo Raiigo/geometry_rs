@@ -71,6 +71,20 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             Option::Some(&mut self.content[i.into()][j.into()])
         }
     }
+
+    pub fn transpose(&self) -> Matrix::<COLUMN, ROW> {
+        let mut new_content: [[f64; ROW]; COLUMN] = [[0.0; ROW]; COLUMN];
+        for (i, l) in self.content.into_iter().enumerate() {
+            for (j, e) in l.into_iter().enumerate() {
+                new_content[j][i] = e;
+            }
+        }
+        Matrix::<COLUMN, ROW> {
+            row: ROW,
+            column: COLUMN,
+            content: new_content,
+        }
+    }
 }
 
 impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ ROW }, { COLUMN }> {
