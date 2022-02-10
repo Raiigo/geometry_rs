@@ -72,7 +72,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
         }
     }
 
-    pub fn transpose(&self) -> Matrix::<COLUMN, ROW> {
+    pub fn transpose(&self) -> Matrix<COLUMN, ROW> {
         let mut new_content: [[f64; ROW]; COLUMN] = [[0.0; ROW]; COLUMN];
         for (i, l) in self.content.into_iter().enumerate() {
             for (j, e) in l.into_iter().enumerate() {
@@ -83,6 +83,18 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             row: ROW,
             column: COLUMN,
             content: new_content,
+        }
+    }
+
+    // Work in progress
+    pub fn determinant(&self) -> Option<f64> {
+        if ROW == COLUMN {
+            let permutations_count: usize = (1..(ROW + 1)).into_iter().product();
+            let permutations: Vec<[f64; ROW]>;
+            println!("{}", permutations_count);
+            Option::None
+        } else {
+            Option::None
         }
     }
 }

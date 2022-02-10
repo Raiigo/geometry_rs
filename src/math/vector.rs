@@ -7,7 +7,6 @@ pub struct VecD<const SIZE: usize> {
 }
 
 impl<const SIZE: usize> VecD<SIZE> {
-
     pub fn new() -> Self {
         Self {
             size: SIZE,
@@ -36,9 +35,13 @@ impl<const SIZE: usize> VecD<SIZE> {
     }
 
     pub fn scalar(&self, vector: &Self) -> f64 {
-        self.content.into_iter().enumerate().map(|(i, e)| {
-            e * vector.content[i]
-        }).collect::<Vec<f64>>().into_iter().sum::<f64>()
+        self.content
+            .into_iter()
+            .enumerate()
+            .map(|(i, e)| e * vector.content[i])
+            .collect::<Vec<f64>>()
+            .into_iter()
+            .sum::<f64>()
     }
 
     pub fn angle(&self, vector: &Self) -> f64 {
@@ -47,17 +50,20 @@ impl<const SIZE: usize> VecD<SIZE> {
 }
 
 impl<T: Into<f64> + Copy, const SIZE: usize> Mul<T> for &VecD<SIZE> {
-    type Output = VecD::<SIZE>;
+    type Output = VecD<SIZE>;
 
     fn mul(self, rhs: T) -> Self::Output {
-        let content_vec = self.content.clone().into_iter().map(|e| {
-            e * rhs.into()
-        }).collect::<Vec<f64>>();
+        let content_vec = self
+            .content
+            .clone()
+            .into_iter()
+            .map(|e| e * rhs.into())
+            .collect::<Vec<f64>>();
         let mut content = [0.0; SIZE];
         for (i, e) in content_vec.into_iter().enumerate() {
             content[i] = e;
         }
-        
+
         VecD::<SIZE> {
             size: SIZE,
             content: content,
@@ -66,12 +72,16 @@ impl<T: Into<f64> + Copy, const SIZE: usize> Mul<T> for &VecD<SIZE> {
 }
 
 impl<const SIZE: usize> Add for &VecD<SIZE> {
-    type Output = VecD::<SIZE>;
+    type Output = VecD<SIZE>;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let content_vec: Vec<f64> = self.content.clone().into_iter().enumerate().map(|(i, e)| {
-            e * rhs.content[i]
-        }).collect::<Vec<f64>>();
+        let content_vec: Vec<f64> = self
+            .content
+            .clone()
+            .into_iter()
+            .enumerate()
+            .map(|(i, e)| e * rhs.content[i])
+            .collect::<Vec<f64>>();
         let mut content = [0.0; SIZE];
         for (i, e) in content_vec.into_iter().enumerate() {
             content[i] = e;
@@ -90,7 +100,7 @@ impl<T: Into<f64> + Copy, const SIZE: usize> From<[T; SIZE]> for VecD<SIZE> {
         for (i, e) in list.into_iter().enumerate() {
             content[i] = e.into();
         }
-        
+
         Self {
             size: SIZE,
             content: content,
