@@ -178,6 +178,22 @@ impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> Mul<T> for &Mat
     }
 }
 
+impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> From<[[T; COLUMN]; ROW]> for Matrix<ROW, COLUMN> {
+    fn from(list: [[T; COLUMN]; ROW]) -> Self {
+        let mut content: [[f64; COLUMN]; ROW] = [[0.0; COLUMN]; ROW];
+        for (i, l) in list.into_iter().enumerate() {
+            for (j, e) in l.into_iter().enumerate() {
+                content[i][j] = e.into();
+            }
+        }
+        Self {
+            row: ROW,
+            column: COLUMN,
+            content: content,
+        }
+    }
+}
+
 impl<const ROW: usize, const COLUMN: usize> Display for Matrix<{ ROW }, { COLUMN }> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut lines: String = String::from("");
