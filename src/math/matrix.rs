@@ -2,6 +2,7 @@ use std::{
     fmt::Display,
     ops::{Add, Mul},
 };
+use crate::math::utils::combinatorics::permutations;
 
 pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
@@ -90,7 +91,7 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
     pub fn determinant(&self) -> Option<f64> {
         if ROW == COLUMN {
             let permutations_count: usize = (1..(ROW + 1)).into_iter().product();
-            let permutations: Vec<[f64; ROW]>;
+            let permutations: Vec<Vec<usize>> = permutations(&(0..ROW).collect::<Vec<usize>>());
             println!("{}", permutations_count);
             Option::None
         } else {

@@ -20,3 +20,19 @@ pub fn permutations<T: Copy + Debug>(set: &Vec<T>) -> Vec<Vec<T>> {
         perms
     }
 }
+
+pub fn parity(permutation: &Vec<i32>) -> i8 {
+    let mut inversions_count: u32 = 0;
+    for (i, e) in permutation.into_iter().enumerate() {
+        for (j, f) in permutation.into_iter().enumerate() {
+            if i < j && *e > *f {
+                inversions_count = inversions_count + 1;
+            }
+        }
+    }
+    if inversions_count % 2 == 0 {
+        1
+    } else {
+        -1
+    }
+}
