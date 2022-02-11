@@ -4,6 +4,8 @@ use std::{
 };
 use crate::math::utils::combinatorics::permutations;
 
+use super::utils::combinatorics::parity;
+
 pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
     pub column: usize,
@@ -90,10 +92,18 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
     // Work in progress
     pub fn determinant(&self) -> Option<f64> {
         if ROW == COLUMN {
-            let permutations_count: usize = (1..(ROW + 1)).into_iter().product();
+            // let permutations_count: usize = (1..(ROW + 1)).into_iter().product();
             let permutations: Vec<Vec<usize>> = permutations(&(0..ROW).collect::<Vec<usize>>());
-            println!("{}", permutations_count);
-            Option::None
+            let mut sum = 0.0;
+            for permutation in permutations {
+                let p = parity(&permutation);
+                let mut product = 1.0;
+                for i in 0..ROW {
+                    product = product * self.content[permutation[i]][i];
+                }
+                sum = sum + p as f64 * product;
+            }
+            Option::Some(sum)
         } else {
             Option::None
         }

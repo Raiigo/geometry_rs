@@ -21,7 +21,7 @@ pub fn permutations<T: Copy + Debug>(set: &Vec<T>) -> Vec<Vec<T>> {
     }
 }
 
-pub fn parity(permutation: &Vec<i32>) -> i8 {
+pub fn parity(permutation: &Vec<usize>) -> i8 {
     let mut inversions_count: u32 = 0;
     for (i, e) in permutation.into_iter().enumerate() {
         for (j, f) in permutation.into_iter().enumerate() {
