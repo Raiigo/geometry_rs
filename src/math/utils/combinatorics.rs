@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 
 pub fn permutations<T: Copy + Debug>(set: &Vec<T>) -> Vec<Vec<T>> {
-    // let permutations_count: usize = (1..(set.len() + 1)).into_iter().product();
     if set.len() == 1 {
         vec![set.to_owned()]
     } else {
