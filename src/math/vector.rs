@@ -1,6 +1,8 @@
 use std::fmt::Display;
 use std::ops::{Add, Mul};
 
+use super::matrix::Matrix;
+
 pub struct VecD<const SIZE: usize> {
     pub size: usize,
     content: [f64; SIZE],
@@ -127,5 +129,15 @@ impl<const SIZE: usize> Clone for VecD<SIZE> {
             size: SIZE,
             content: self.content.clone(),
         }
+    }
+}
+
+impl<const SIZE: usize> From<Matrix::<SIZE, 1>> for VecD::<SIZE> {
+    fn from(matrix: Matrix::<SIZE, 1>) -> Self {
+        let mut vector = VecD::<SIZE>::new();
+        for i in 0..SIZE {
+            *vector.get_mut_element(i).unwrap() = matrix.get_element(i, 1).unwrap();
+        }
+        vector
     }
 }
