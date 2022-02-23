@@ -4,7 +4,7 @@ use std::{
 };
 use crate::math::utils::combinatorics::permutations;
 
-use super::utils::combinatorics::parity;
+use super::{utils::combinatorics::parity, vector::VecD};
 
 pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
@@ -197,5 +197,15 @@ impl<const ROW: usize, const COLUMN: usize> Display for Matrix<{ ROW }, { COLUMN
             lines.push_str(&line);
         }
         write!(f, "{}", lines)
+    }
+}
+
+impl<const SIZE: usize> From<VecD::<SIZE>> for Matrix<SIZE, 1> {
+    fn from(vector: VecD::<SIZE>) -> Self {
+        let mut matrix = Matrix::<SIZE, 1>::new();
+        for i in 0..SIZE {
+            *matrix.get_mut_element(i, 0).unwrap() = vector.get_element(i).unwrap();
+        }
+        matrix
     }
 }
