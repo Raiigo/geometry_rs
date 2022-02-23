@@ -1,8 +1,8 @@
+use crate::math::utils::combinatorics::permutations;
 use std::{
     fmt::Display,
     ops::{Add, Mul},
 };
-use crate::math::utils::combinatorics::permutations;
 
 use super::{utils::combinatorics::parity, vector::VecD};
 
@@ -10,6 +10,23 @@ pub struct Matrix<const ROW: usize, const COLUMN: usize> {
     pub row: usize,
     pub column: usize,
     content: [[f64; COLUMN]; ROW],
+}
+
+impl<const SIZE: usize> Matrix<SIZE, SIZE> {
+    pub const SIZE: usize = SIZE;
+    pub fn determinant(&self) -> f64 {
+        let permutations: Vec<Vec<usize>> = permutations(&(0..SIZE).collect::<Vec<usize>>());
+        let mut sum = 0.0;
+        for permutation in permutations {
+            let p = parity(&permutation);
+            let mut product = 1.0;
+            for i in 0..SIZE {
+                product = product * self.content[permutation[i]][i];
+            }
+            sum = sum + p as f64 * product;
+        }
+        sum
+    }
 }
 
 impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
@@ -88,26 +105,6 @@ impl<const ROW: usize, const COLUMN: usize> Matrix<ROW, COLUMN> {
             content: new_content,
         }
     }
-
-    // Work in progress
-    pub fn determinant(&self) -> Option<f64> {
-        if ROW == COLUMN {
-            // let permutations_count: usize = (1..(ROW + 1)).into_iter().product();
-            let permutations: Vec<Vec<usize>> = permutations(&(0..ROW).collect::<Vec<usize>>());
-            let mut sum = 0.0;
-            for permutation in permutations {
-                let p = parity(&permutation);
-                let mut product = 1.0;
-                for i in 0..ROW {
-                    product = product * self.content[permutation[i]][i];
-                }
-                sum = sum + p as f64 * product;
-            }
-            Option::Some(sum)
-        } else {
-            Option::None
-        }
-    }
 }
 
 impl<const ROW: usize, const COLUMN: usize> Add for &Matrix<{ ROW }, { COLUMN }> {
@@ -178,6 +175,22 @@ impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> Mul<T> for &Mat
             }
         }
         result
+    }
+}
+
+impl<T: Into<f64> + Copy, const ROW: usize, const COLUMN: usize> From<[[T; COLUMN]; ROW]> for Matrix<ROW, COLUMN> {
+    fn from(list: [[T; COLUMN]; ROW]) -> Self {
+        let mut content: [[f64; COLUMN]; ROW] = [[0.0; COLUMN]; ROW];
+        for (i, l) in list.into_iter().enumerate() {
+            for (j, e) in l.into_iter().enumerate() {
+                content[i][j] = e.into();
+            }
+        }
+        Self {
+            row: ROW,
+            column: COLUMN,
+            content: content,
+        }
     }
 }
 
