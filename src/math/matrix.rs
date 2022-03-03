@@ -222,3 +222,36 @@ impl<const SIZE: usize> From<VecD::<SIZE>> for Matrix<SIZE, 1> {
         matrix
     }
 }
+
+pub struct MatrixIterator<const ROW: usize, const COLUMN: usize> {
+    matrix: Matrix<ROW, COLUMN>,
+    counter: usize,
+}
+
+impl<const ROW: usize, const COLUMN: usize> From<Matrix<ROW, COLUMN>> for MatrixIterator<ROW, COLUMN> {
+    fn from(matrix: Matrix<ROW, COLUMN>) -> Self {
+        Self {
+            matrix: matrix,
+            counter: 0,
+        }
+    }
+}
+
+impl<const ROW: usize, const COLUMN: usize> Iterator for MatrixIterator<ROW, COLUMN> {
+    type Item = f64;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let result;
+        if self.counter < ROW * COLUMN {
+            let i = self.counter / COLUMN;
+            let j = self.counter % COLUMN;
+            result = self.matrix.get_element(i, j);
+        } else {
+            result = None;
+        }
+        self.counter += 1;
+        return result;
+    }
+}
+// 3x3 : 0 -> (0, 0) 1 -> (0, 1) 2 -> (0, 2)
+//       3 -> (1, 0) 4 -> (1, 1) 3 -> (1, 2)
